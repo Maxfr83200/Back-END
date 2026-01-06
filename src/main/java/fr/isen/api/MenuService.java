@@ -11,6 +11,7 @@ import java.util.Optional;
 
 public interface MenuService {
     List<MenuItem> getAllMenuItems();
+    List<MenuItem> getMenuItemsByCategory(String category);
     MenuItem getMenuItemById(int id);
     List<MenuItem> getAvailableMenuItems();
 }

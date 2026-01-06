@@ -16,7 +16,7 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public List<MenuItem> getAllMenuItems() {
         String sql = 
-            "SELECT id, name, description, price, image_url, calories," +
+            "SELECT id, name, description, price, category, image_url, calories," +
                    " is_available, is_spicy, is_vegetarian, protein_required" +
             " FROM menu_items" +
             " ORDER BY id";
@@ -24,9 +24,45 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
+    public List<MenuItem> getMenuItemsByCategory(String category) {
+        String sql = 
+            "SELECT id, name, description, price, category, image_url, calories," +
+                   " is_available, is_spicy, is_vegetarian, protein_required" +
+            " FROM menu_items" +
+            " WHERE category = ?" +
+            " ORDER BY id";
+        List<MenuItem> items = new ArrayList<>();
+
+        if(category == "plats")
+            category = "Plats principaux";
+        else if(category == "snacks")
+            category = "Snacks";
+        else if(category == "desserts")
+            category = "Desserts";
+        else if(category == "boissons")
+            category = "Boissons";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, category);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    items.add(mapRow(rs));
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erreur SQL getMenuItemsByCategory()", e);
+        }
+
+        return items;
+    }
+
+    @Override
     public MenuItem getMenuItemById(int id) {
         String sql = 
-            "SELECT id, name, description, price, image_url, calories," +
+            "SELECT id, name, description, price, category, image_url, calories," +
                    " is_available, is_spicy, is_vegetarian, protein_required" +
             " FROM menu_items" +
             " WHERE id = ?";
@@ -79,6 +115,7 @@ public class MenuServiceImpl implements MenuService {
                 rs.getInt("id"),
                 rs.getString("name"),
                 rs.getString("description"),
+                rs.getString("category"),
                 rs.getDouble("price"),
                 rs.getString("image_url"),
                 rs.getInt("calories"),

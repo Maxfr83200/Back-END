@@ -23,6 +23,11 @@ public class Main {
 
         app.get("/health", ctx -> ctx.result("OK"));
 
+        app.get("/menu/plats", ctx -> ctx.json(menuService.getMenuItemsByCategory("plats")));
+        app.get("/menu/snacks", ctx -> ctx.json(menuService.getMenuItemsByCategory("snacks")));
+        app.get("/menu/desserts", ctx -> ctx.json(menuService.getMenuItemsByCategory("desserts")));
+        app.get("/menu/boissons", ctx -> ctx.json(menuService.getMenuItemsByCategory("boissons")));
+
         app.get("/menu", ctx -> ctx.json(menuService.getAllMenuItems()));
 
         app.get("/menu/available", ctx -> ctx.json(menuService.getAvailableMenuItems()));

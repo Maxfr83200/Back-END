@@ -6,6 +6,7 @@ public class MenuItem {
     private final String name;
     private final String description;
     private final double price;
+    private final String category;
     private final String imageUrl;
     private final int calories;
     private final boolean isAvailable;
@@ -13,11 +14,12 @@ public class MenuItem {
     private final boolean isVegetarian;
     private final boolean proteinRequired;
 
-    public MenuItem(int id, String name, String description, double price, String imageUrl, int calories,
+    public MenuItem(int id, String name, String description,String category, double price, String imageUrl, int calories,
                     boolean isAvailable, boolean isSpicy, boolean isVegetarian, boolean proteinRequired) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.category = category;
         this.price = price;
         this.imageUrl = imageUrl;
         this.calories = calories;
@@ -30,6 +32,7 @@ public class MenuItem {
     public int getId() { return id; }
     public String getName() { return name; }
     public String getDescription() { return description; }
+    public String getCategory() { return category; }
     public double getPrice() { return price; }
     public String getImageUrl() { return imageUrl; }
     public int getCalories() { return calories; }
