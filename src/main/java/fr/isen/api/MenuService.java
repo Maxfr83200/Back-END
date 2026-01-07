@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MenuService {
-    List<MenuItem> getAllMenuItems();
-    List<MenuItem> getMenuItemsByCategory(String category);
+    List<MenuItem> getAllMenuItems(boolean fr);
+    List<MenuItem> getMenuItemsByCategory(String category, boolean fr);
     MenuItem getMenuItemById(int id);
     List<MenuItem> getAvailableMenuItems();
 }

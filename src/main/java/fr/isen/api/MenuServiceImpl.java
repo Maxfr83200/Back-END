@@ -14,35 +14,52 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public List<MenuItem> getAllMenuItems() {
-        String sql = 
-            "SELECT id, name, description, price, category, image_url, calories," +
-                   " is_available, is_spicy, is_vegetarian, protein_required" +
-            " FROM menu_items" +
-            " ORDER BY id";
-        return queryList(sql);
+    public List<MenuItem> getAllMenuItems(boolean fr) {
+        if (!fr) {
+            String sqlEng = "SELECT id, nameEng AS name, descriptionEng AS description, price, category, image_url, calories," +
+                    " is_available, is_spicy, is_vegetarian, protein_required" +
+                    " FROM menu_items" +
+                    " ORDER BY id";
+            return queryList(sqlEng);
+        } else {
+            String sql = "SELECT id, name, description, price, category, image_url, calories," +
+                    " is_available, is_spicy, is_vegetarian, protein_required" +
+                    " FROM menu_items" +
+                    " ORDER BY id";
+            return queryList(sql);
+        }
     }
 
     @Override
-    public List<MenuItem> getMenuItemsByCategory(String category) {
-        String sql = 
-            "SELECT id, name, description, price, category, image_url, calories," +
-                   " is_available, is_spicy, is_vegetarian, protein_required" +
-            " FROM menu_items" +
-            " WHERE category = ?" +
-            " ORDER BY id";
+    public List<MenuItem> getMenuItemsByCategory(String category, boolean fr) {
+        String sql;
+        if(!fr){
+            sql = "SELECT id, nameEng AS name, descriptionEng AS description, price, category, image_url, calories," +
+                " is_available, is_spicy, is_vegetarian, protein_required" +
+                " FROM menu_items" +
+                " WHERE category = ?" +
+                " ORDER BY id";
+
+        }else{
+            sql = "SELECT id, name, description, price, category, image_url, calories," +
+                " is_available, is_spicy, is_vegetarian, protein_required" +
+                " FROM menu_items" +
+                " WHERE category = ?" +
+                " ORDER BY id";
+        }
+        
         List<MenuItem> items = new ArrayList<>();
 
-        if(category == "plats")
+        if (category == "plats")
             category = "Plats principaux";
-        else if(category == "snacks")
+        else if (category == "snacks")
             category = "Snacks";
-        else if(category == "desserts")
+        else if (category == "desserts")
             category = "Desserts";
-        else if(category == "boissons")
+        else if (category == "boissons")
             category = "Boissons";
         try (Connection conn = getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, category);
 
@@ -61,18 +78,18 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public MenuItem getMenuItemById(int id) {
-        String sql = 
-            "SELECT id, name, description, price, category, image_url, calories," +
-                   " is_available, is_spicy, is_vegetarian, protein_required" +
-            " FROM menu_items" +
-            " WHERE id = ?";
+        String sql = "SELECT id, name, description,category, price, category, image_url, calories," +
+                " is_available, is_spicy, is_vegetarian, protein_required" +
+                " FROM menu_items" +
+                " WHERE id = ?";
         try (Connection conn = getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, id);
 
             try (ResultSet rs = ps.executeQuery()) {
-                if (!rs.next()) return null;
+                if (!rs.next())
+                    return null;
                 return mapRow(rs);
             }
 
@@ -83,12 +100,11 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public List<MenuItem> getAvailableMenuItems() {
-        String sql = 
-            "SELECT id, name, description, price, image_url, calories," +
-                   " is_available, is_spicy, is_vegetarian, protein_required" +
-            " FROM menu_items" +
-            " WHERE is_available = 1" +
-            " ORDER BY id";
+        String sql = "SELECT id, name, description,category, price, image_url, calories," +
+                " is_available, is_spicy, is_vegetarian, protein_required" +
+                " FROM menu_items" +
+                " WHERE is_available = 1" +
+                " ORDER BY id";
         return queryList(sql);
     }
 
@@ -96,8 +112,8 @@ public class MenuServiceImpl implements MenuService {
         List<MenuItem> items = new ArrayList<>();
 
         try (Connection conn = getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 items.add(mapRow(rs));
@@ -122,7 +138,6 @@ public class MenuServiceImpl implements MenuService {
                 rs.getInt("is_available") == 1,
                 rs.getInt("is_spicy") == 1,
                 rs.getInt("is_vegetarian") == 1,
-                rs.getInt("protein_required") == 1
-        );
+                rs.getInt("protein_required") == 1);
     }
 }

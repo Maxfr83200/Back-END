@@ -23,15 +23,19 @@ public class Main {
 
         app.get("/health", ctx -> ctx.result("OK"));
 
-        app.get("/menu/plats", ctx -> ctx.json(menuService.getMenuItemsByCategory("plats")));
-        app.get("/menu/snacks", ctx -> ctx.json(menuService.getMenuItemsByCategory("snacks")));
-        app.get("/menu/desserts", ctx -> ctx.json(menuService.getMenuItemsByCategory("desserts")));
-        app.get("/menu/boissons", ctx -> ctx.json(menuService.getMenuItemsByCategory("boissons")));
+        app.get("fr/menu/plats", ctx -> ctx.json(menuService.getMenuItemsByCategory("plats", true)));
+        app.get("fr/menu/snacks", ctx -> ctx.json(menuService.getMenuItemsByCategory("snacks", true)));
+        app.get("fr/menu/desserts", ctx -> ctx.json(menuService.getMenuItemsByCategory("desserts", true)));
+        app.get("fr/menu/boissons", ctx -> ctx.json(menuService.getMenuItemsByCategory("boissons", true)));
+        app.get("fr/menu/all", ctx -> ctx.json(menuService.getAllMenuItems(true)));
 
-        app.get("/menu", ctx -> ctx.json(menuService.getAllMenuItems()));
+        app.get("eng/menu/plats", ctx -> ctx.json(menuService.getMenuItemsByCategory("plats", false)));
+        app.get("eng/menu/snacks", ctx -> ctx.json(menuService.getMenuItemsByCategory("snacks", false)));
+        app.get("eng/menu/desserts", ctx -> ctx.json(menuService.getMenuItemsByCategory("desserts", false)));
+        app.get("eng/menu/boissons", ctx -> ctx.json(menuService.getMenuItemsByCategory("boissons", false)));
+        app.get("eng/menu/all", ctx -> ctx.json(menuService.getAllMenuItems(false)));
 
-        app.get("/menu/available", ctx -> ctx.json(menuService.getAvailableMenuItems()));
-
+        app.get("menu/available", ctx -> ctx.json(menuService.getAvailableMenuItems()));
         app.get("/menu/{id}", ctx -> {
             int id;
             try {
@@ -49,7 +53,7 @@ public class Main {
             }
         });
 
-        System.out.println("✅ API Javalin lancée : http://localhost:8080/menu");
+        System.out.println("✅ API Javalin lancée : http://localhost:8080/fr/menu/all");
     }
 
     // petite classe pour les erreurs JSON
