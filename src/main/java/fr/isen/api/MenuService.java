@@ -12,6 +12,9 @@ import java.util.Optional;
 public interface MenuService {
     List<MenuItem> getAllMenuItems(boolean fr);
     List<MenuItem> getMenuItemsByCategory(String category, boolean fr);
-    MenuItem getMenuItemById(int id);
+    MenuItem getMenuItemById(int id, boolean fr);
     List<MenuItem> getAvailableMenuItems();
+    void updateMenuItemBasic(int id, String name, String description, double price, boolean available);
+
+    
 }

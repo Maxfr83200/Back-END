@@ -9,14 +9,15 @@ public class MenuServiceImpl implements MenuService {
     private static final String USER = "root";
     private static final String PASSWORD = ""; // XAMPP = souvent vide
 
-    private Connection getConnection() throws SQLException {
+    private static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
     @Override
     public List<MenuItem> getAllMenuItems(boolean fr) {
         if (!fr) {
-            String sqlEng = "SELECT id, nameEng AS name, descriptionEng AS description, price, category, image_url, calories," +
+            String sqlEng = "SELECT id, nameEng AS name, descriptionEng AS description, price, category, image_url, calories,"
+                    +
                     " is_available, is_spicy, is_vegetarian, protein_required" +
                     " FROM menu_items" +
                     " ORDER BY id";
@@ -33,21 +34,21 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public List<MenuItem> getMenuItemsByCategory(String category, boolean fr) {
         String sql;
-        if(!fr){
+        if (!fr) {
             sql = "SELECT id, nameEng AS name, descriptionEng AS description, price, category, image_url, calories," +
-                " is_available, is_spicy, is_vegetarian, protein_required" +
-                " FROM menu_items" +
-                " WHERE category = ?" +
-                " ORDER BY id";
+                    " is_available, is_spicy, is_vegetarian, protein_required" +
+                    " FROM menu_items" +
+                    " WHERE category = ?" +
+                    " ORDER BY id";
 
-        }else{
+        } else {
             sql = "SELECT id, name, description, price, category, image_url, calories," +
-                " is_available, is_spicy, is_vegetarian, protein_required" +
-                " FROM menu_items" +
-                " WHERE category = ?" +
-                " ORDER BY id";
+                    " is_available, is_spicy, is_vegetarian, protein_required" +
+                    " FROM menu_items" +
+                    " WHERE category = ?" +
+                    " ORDER BY id";
         }
-        
+
         List<MenuItem> items = new ArrayList<>();
 
         if (category == "plats")
@@ -77,11 +78,20 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public MenuItem getMenuItemById(int id) {
-        String sql = "SELECT id, name, description,category, price, category, image_url, calories," +
-                " is_available, is_spicy, is_vegetarian, protein_required" +
-                " FROM menu_items" +
-                " WHERE id = ?";
+    public MenuItem getMenuItemById(int id, boolean fr) {
+        String sql;
+        if (fr) {
+            sql = "SELECT id, name, description,category, price, category, image_url, calories," +
+                    " is_available, is_spicy, is_vegetarian, protein_required" +
+                    " FROM menu_items" +
+                    " WHERE id = ?";
+        } else {
+            sql = "SELECT id, nameEng AS name, descriptionEng AS description,category, price, category, image_url, calories,"
+                    +
+                    " is_available, is_spicy, is_vegetarian, protein_required" +
+                    " FROM menu_items" +
+                    " WHERE id = ?";
+        }
         try (Connection conn = getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -139,5 +149,29 @@ public class MenuServiceImpl implements MenuService {
                 rs.getInt("is_spicy") == 1,
                 rs.getInt("is_vegetarian") == 1,
                 rs.getInt("protein_required") == 1);
+    }
+
+    @Override
+    public void updateMenuItemBasic(int id, String name, String description, double price, boolean available) {
+
+        String sql = "UPDATE menu_items " +
+                "SET name = ?, description = ?, price = ?, is_available = ? " +
+                "WHERE id = ?";
+
+        try (Connection conn = getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, name);
+            ps.setString(2, description);
+            ps.setDouble(3, price);
+            ps.setBoolean(4, available);
+            ps.setInt(5, id);
+            int updated = ps.executeUpdate();
+            if (updated == 0) {
+                throw new RuntimeException("Aucun item trouvé avec id=" + id);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erreur SQL updateMenuItemBasic()", e);
+        }
     }
 }
