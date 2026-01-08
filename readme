@@ -1,0 +1,75 @@
+## Prérequis
+
+* **Java JDK** (Version recommandée : 17 ou supérieure, vérifier le `pom.xml`)
+* **IntelliJ IDEA**
+* **XAMPP** (Apache + MySQL/MariaDB)
+
+## Configuration de la Base de Données (XAMPP)
+
+### 1. Configuration de phpMyAdmin
+
+Pour que l'application puisse se connecter sans erreur, vous devez configurer phpMyAdmin pour accepter l'utilisateur `root` sans mot de passe.
+
+1. Localisez le fichier de configuration XAMPP : `C:\xampp\phpMyAdmin\config.inc.php`
+2. Remplacez le contenu ou assurez-vous que la configuration ressemble à ceci (notamment `AllowNoPassword = true`) :
+```php
+<?php
+/* Authentication type and info */
+$cfg['Blowfish_secret'] = 'xampp'; /* YOU SHOULD CHANGE THIS FOR A MORE SECURE COOKIE AUTH! */
+
+$i = 0;
+$i++; // First Server
+
+$cfg['Servers'][$i]['auth_type'] = 'cookie';
+$cfg['Servers'][$i]['user'] = 'root';
+$cfg['Servers'][$i]['password'] = ''; // Mot de passe vide
+$cfg['Servers'][$i]['extension'] = 'mysqli';
+$cfg['Servers'][$i]['AllowNoPassword'] = true; // Important
+$cfg['Lang'] = '';
+
+/* Bind to the localhost ipv4 address and tcp */
+$cfg['Servers'][$i]['host'] = '127.0.0.1';
+$cfg['Servers'][$i]['connect_type'] = 'tcp';
+
+/* User for advanced features */
+$cfg['Servers'][$i]['controluser'] = 'pma';
+$cfg['Servers'][$i]['controlpass'] = '';
+
+// ... (Le reste des configurations standard pma__ tables)
+?>
+```
+
+### 2. Démarrage des Services
+
+Ouvrez le panneau de contrôle XAMPP.
+
+Démarrez le module Apache.
+
+Démarrez le module MySQL.
+
+### 3. Importation des Données
+
+Ouvrez votre navigateur et allez sur http://localhost/phpmyadmin.
+
+Bien vérifier que le champ utilisateur est "root" et que le champ mot de passe est VIDE. Cliquer sur "Se connecter".
+
+Créez une nouvelle base de données nommée : borne_asiat.
+
+Sélectionnez cette base de données, allez dans l'onglet Importer.
+
+Chargez le fichier borne_asiat.sql fourni dans le projet.
+
+Importez directement en cliquant sur le bouton en fin de page. 
+
+## 🚀 Lancement de l'Application (Back-end)
+
+Ouvrez le dossier du projet Back-end avec IntelliJ IDEA.
+
+Attendez que Maven indexe les dépendances.
+
+Naviguez vers le fichier principal : src/main/java/fr/isen/api/Main.java
+
+Faites un clic droit sur le fichier ou la classe et sélectionnez Run 'Main'.
+
+pour vérifier que la l'API marche bien, l'URL à entrer est : "http://localhost:8080/fr/menu/all"
+Vous devriez voir une liste de 30 plats avec leurs attributs.
