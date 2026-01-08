@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<!--GENERATED FILE, PLEASE DO NOT EDIT!!!--><EXT object="api" version="4">
+  <OBJECT>
+    <ID name="api" mc="Standard.Package" uid="add8723f-e6d6-4932-8522-29eaea04caf6"/>
+    <PID name="isen" mc="Standard.Package" uid="edffa26d-9eb1-4f40-abf0-9003806cc8e3"/>
+    <ATTRIBUTES>
+      <ATT name="IsInstantiable">false</ATT>
+      <ATT name="IsAbstract">false</ATT>
+      <ATT name="IsLeaf">false</ATT>
+      <ATT name="IsRoot">false</ATT>
+      <ATT name="Visibility">Public</ATT>
+      <ATT name="Name"><![CDATA[api]]></ATT>
+      <ATT name="status">1970354901745664</ATT>
+    </ATTRIBUTES>
+    <DEPENDENCIES>
+      <COMP relation="OwnedElement">
+        <COMPID name="MenuServiceImpl" mc="Standard.Class" uid="5de4736c-2c7d-4446-89dc-1a84a0140a6f"/>
+        <COMPID name="MenuItemUpdateRequest" mc="Standard.Class" uid="3f2b5498-d007-49c4-a0b4-d874cf51f136"/>
+        <COMPID name="MenuService" mc="Standard.Interface" uid="3132988e-841e-4e23-8dcf-30e9df5569d0"/>
+        <COMPID name="Main" mc="Standard.Class" uid="d6c07584-b2ea-476e-8e38-7ca73ae16202"/>
+        <COMPID name="MenuItem" mc="Standard.Class" uid="040a1498-f340-4a93-b3c1-e6a49ca6c242"/>
+      </COMP>
+      <LINK relation="Extension">
+        <FOREIGNID name="JavaPackage" mc="Infrastructure.Stereotype" uid="01ec23a8-0000-0126-0000-000000000000"/>
+      </LINK>
+    </DEPENDENCIES>
+  </OBJECT>
+</EXT>

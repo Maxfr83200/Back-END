@@ -1,0 +1,258 @@
+<?xml version="1.0" ?>
+<!--GENERATED FILE, PLEASE DO NOT EDIT!!!--><EXT object="Main" version="4">
+  <OBJECT>
+    <ID name="Main" mc="Standard.Class" uid="d6c07584-b2ea-476e-8e38-7ca73ae16202"/>
+    <PID name="api" mc="Standard.Package" uid="add8723f-e6d6-4932-8522-29eaea04caf6"/>
+    <ATTRIBUTES>
+      <ATT name="IsActive">false</ATT>
+      <ATT name="IsMain">false</ATT>
+      <ATT name="IsElementary">false</ATT>
+      <ATT name="IsAbstract">false</ATT>
+      <ATT name="IsLeaf">false</ATT>
+      <ATT name="IsRoot">false</ATT>
+      <ATT name="Visibility">Public</ATT>
+      <ATT name="Name"><![CDATA[Main]]></ATT>
+      <ATT name="status">1970354901745664</ATT>
+    </ATTRIBUTES>
+    <DEPENDENCIES>
+      <COMP relation="OwnedOperation">
+        <OBJECT>
+          <ID name="main" mc="Standard.Operation" uid="d3cca1b5-3b4b-44a8-a458-1c0ccbcb751c"/>
+          <ATTRIBUTES>
+            <ATT name="Concurrency">false</ATT>
+            <ATT name="Final">false</ATT>
+            <ATT name="Passing">MethodOut</ATT>
+            <ATT name="Visibility">Public</ATT>
+            <ATT name="IsClass">true</ATT>
+            <ATT name="IsAbstract">false</ATT>
+            <ATT name="Name"><![CDATA[main]]></ATT>
+            <ATT name="status">1970354901745664</ATT>
+          </ATTRIBUTES>
+          <DEPENDENCIES>
+            <COMP relation="IO">
+              <OBJECT>
+                <ID name="args" mc="Standard.Parameter" uid="f3abd033-9527-40fc-9937-dae816574247"/>
+                <ATTRIBUTES>
+                  <ATT name="ParameterPassing">Inout</ATT>
+                  <ATT name="MultiplicityMin"><![CDATA[0]]></ATT>
+                  <ATT name="MultiplicityMax"><![CDATA[*]]></ATT>
+                  <ATT name="TypeConstraint"></ATT>
+                  <ATT name="DefaultValue"></ATT>
+                  <ATT name="IsOrdered">false</ATT>
+                  <ATT name="IsUnique">false</ATT>
+                  <ATT name="IsException">false</ATT>
+                  <ATT name="IsStream">false</ATT>
+                  <ATT name="Effect">ReadEffect</ATT>
+                  <ATT name="Name"><![CDATA[args]]></ATT>
+                  <ATT name="status">1970354901745664</ATT>
+                </ATTRIBUTES>
+                <DEPENDENCIES>
+                  <LINK relation="Type">
+                    <FOREIGNID name="string" mc="Standard.DataType" uid="00000004-0000-000d-0000-000000000000"/>
+                  </LINK>
+                  <COMP relation="Tag">
+                    <OBJECT>
+                      <ID name="" mc="Infrastructure.TaggedValue" uid="ae49616e-52c2-468d-bad0-0808027d8486"/>
+                      <ATTRIBUTES>
+                        <ATT name="Name"></ATT>
+                        <ATT name="status">1970354901745664</ATT>
+                      </ATTRIBUTES>
+                      <DEPENDENCIES>
+                        <COMP relation="Actual">
+                          <OBJECT>
+                            <ID name="" mc="Infrastructure.TagParameter" uid="a69ea5fd-6781-46a4-9a42-cc25ed3c5458"/>
+                            <ATTRIBUTES>
+                              <ATT name="Value"><![CDATA[Array]]></ATT>
+                              <ATT name="status">1970354901745664</ATT>
+                            </ATTRIBUTES>
+                            <DEPENDENCIES></DEPENDENCIES>
+                          </OBJECT>
+                        </COMP>
+                        <LINK relation="Definition">
+                          <FOREIGNID name="type" mc="Infrastructure.TagType" uid="00000000-0000-3767-0000-000000000000"/>
+                        </LINK>
+                      </DEPENDENCIES>
+                    </OBJECT>
+                  </COMP>
+                </DEPENDENCIES>
+              </OBJECT>
+            </COMP>
+            <COMP relation="Descriptor">
+              <OBJECT>
+                <ID name="" mc="Infrastructure.Note" uid="53bb23bf-771c-4b6b-a6ce-4f09fcd55ed5"/>
+                <ATTRIBUTES>
+                  <ATT name="Content"><![CDATA[MenuService menuService = new MenuServiceImpl();
+
+Javalin app = Javalin.create(config -> {
+    config.bundledPlugins.enableRouteOverview("/routes");
+    config.http.defaultContentType = "application/json";
+    config.bundledPlugins.enableCors(cors -> {
+        cors.addRule(it -> it.anyHost()); // pratique pour JavaFX/localhost
+    });
+}).start(8080);
+
+app.get("/health", ctx -> ctx.result("OK"));
+
+app.get("fr/menu/plats", ctx -> ctx.json(menuService.getMenuItemsByCategory("plats", true)));
+app.get("fr/menu/snacks", ctx -> ctx.json(menuService.getMenuItemsByCategory("snacks", true)));
+app.get("fr/menu/desserts", ctx -> ctx.json(menuService.getMenuItemsByCategory("desserts", true)));
+app.get("fr/menu/boissons", ctx -> ctx.json(menuService.getMenuItemsByCategory("boissons", true)));
+app.get("fr/menu/all", ctx -> ctx.json(menuService.getAllMenuItems(true)));
+app.get("fr/menu/{id}", ctx -> {
+    int id;
+    try {
+        id = Integer.parseInt(ctx.pathParam("id"));
+    } catch (NumberFormatException e) {
+        ctx.status(400).json(new ErrorResponse("Invalid id"));
+        return;
+    }
+
+    var item = menuService.getMenuItemById(id, true);
+    if (item == null) {
+        ctx.status(404).json(new ErrorResponse("Not found"));
+    } else {
+        ctx.json(item);
+    }
+});
+app.put("fr/menu/{id}", ctx -> {
+    int id = Integer.parseInt(ctx.pathParam("id"));
+
+    MenuItemUpdateRequest body = ctx.bodyAsClass(MenuItemUpdateRequest.class);
+
+    menuService.updateMenuItemBasic(
+            id,
+            body.name,
+            body.description,
+            body.price,
+            body.available);
+
+    ctx.status(204);
+});
+
+app.get("eng/menu/plats", ctx -> ctx.json(menuService.getMenuItemsByCategory("plats", false)));
+app.get("eng/menu/snacks", ctx -> ctx.json(menuService.getMenuItemsByCategory("snacks", false)));
+app.get("eng/menu/desserts", ctx -> ctx.json(menuService.getMenuItemsByCategory("desserts", false)));
+app.get("eng/menu/boissons", ctx -> ctx.json(menuService.getMenuItemsByCategory("boissons", false)));
+app.get("eng/menu/all", ctx -> ctx.json(menuService.getAllMenuItems(false)));
+app.get("eng/menu/{id}", ctx -> {
+    int id;
+    try {
+        id = Integer.parseInt(ctx.pathParam("id"));
+    } catch (NumberFormatException e) {
+        ctx.status(400).json(new ErrorResponse("Invalid id"));
+        return;
+    }
+
+    var item = menuService.getMenuItemById(id, false);
+    if (item == null) {
+        ctx.status(404).json(new ErrorResponse("Not found"));
+    } else {
+        ctx.json(item);
+    }
+});
+
+app.get("menu/available", ctx -> ctx.json(menuService.getAvailableMenuItems()));
+
+System.out.println("✅ API Javalin lancée : http://localhost:8080/fr/menu/all");
+]]></ATT>
+                  <ATT name="MimeType"><![CDATA[text/plain]]></ATT>
+                  <ATT name="Name"></ATT>
+                  <ATT name="status">1970354901745664</ATT>
+                </ATTRIBUTES>
+                <DEPENDENCIES>
+                  <LINK relation="Model">
+                    <FOREIGNID name="JavaCode" mc="Infrastructure.NoteType" uid="003800a8-0000-018e-0000-000000000000"/>
+                  </LINK>
+                </DEPENDENCIES>
+              </OBJECT>
+            </COMP>
+          </DEPENDENCIES>
+        </OBJECT>
+      </COMP>
+      <COMP relation="OwnedImport">
+        <OBJECT>
+          <ID name="" mc="Standard.ElementImport" uid="5c2f1548-70c6-4641-8ddd-33f1d543a403"/>
+          <ATTRIBUTES>
+            <ATT name="Visibility">Private</ATT>
+            <ATT name="Name"></ATT>
+            <ATT name="status">1970354901745664</ATT>
+          </ATTRIBUTES>
+          <DEPENDENCIES>
+            <LINK relation="ImportedElement">
+              <ID name="List" mc="Standard.Interface" uid="e3a659c9-689b-40f8-b7c7-c1833b2d8441"/>
+            </LINK>
+          </DEPENDENCIES>
+        </OBJECT>
+        <OBJECT>
+          <ID name="" mc="Standard.ElementImport" uid="bf43cf66-e80d-4797-a0d2-e6061a549d8b"/>
+          <ATTRIBUTES>
+            <ATT name="Visibility">Private</ATT>
+            <ATT name="Name"></ATT>
+            <ATT name="status">1970354901745664</ATT>
+          </ATTRIBUTES>
+          <DEPENDENCIES>
+            <LINK relation="ImportedElement">
+              <ID name="IOException" mc="Standard.Class" uid="a3f7bbdb-e435-4704-ba8e-477140152fc9"/>
+            </LINK>
+          </DEPENDENCIES>
+        </OBJECT>
+        <OBJECT>
+          <ID name="" mc="Standard.ElementImport" uid="b682c18d-8224-4201-9964-8821062d160e"/>
+          <ATTRIBUTES>
+            <ATT name="Visibility">Private</ATT>
+            <ATT name="Name"></ATT>
+            <ATT name="status">1970354901745664</ATT>
+          </ATTRIBUTES>
+          <DEPENDENCIES>
+            <LINK relation="ImportedElement">
+              <ID name="InputStream" mc="Standard.Class" uid="2e4136d5-614d-49c1-9c36-e243e8139d53"/>
+            </LINK>
+          </DEPENDENCIES>
+        </OBJECT>
+        <OBJECT>
+          <ID name="" mc="Standard.ElementImport" uid="5778389b-edd8-40fe-b0db-350e1dc7a33b"/>
+          <ATTRIBUTES>
+            <ATT name="Visibility">Private</ATT>
+            <ATT name="Name"></ATT>
+            <ATT name="status">1970354901745664</ATT>
+          </ATTRIBUTES>
+          <DEPENDENCIES>
+            <LINK relation="ImportedElement">
+              <ID name="StandardCharsets" mc="Standard.Class" uid="1bac152a-8869-425c-9bdf-c9ab1084246e"/>
+            </LINK>
+          </DEPENDENCIES>
+        </OBJECT>
+      </COMP>
+      <COMP relation="OwnedElement">
+        <COMPID name="ErrorResponse" mc="Standard.Class" uid="ab01727a-6c3b-4a4b-bcb9-b89a3eb52408"/>
+      </COMP>
+      <LINK relation="Extension">
+        <FOREIGNID name="JavaClass" mc="Infrastructure.Stereotype" uid="01ec23a8-0000-0258-0000-000000000000"/>
+      </LINK>
+      <COMP relation="Tag">
+        <OBJECT>
+          <ID name="" mc="Infrastructure.TaggedValue" uid="642abde0-60b8-4d6a-b3bc-1645bb05ff75"/>
+          <ATTRIBUTES>
+            <ATT name="Name"></ATT>
+            <ATT name="status">1970354901745664</ATT>
+          </ATTRIBUTES>
+          <DEPENDENCIES>
+            <COMP relation="Actual">
+              <OBJECT>
+                <ID name="" mc="Infrastructure.TagParameter" uid="59058434-16ab-4db4-804f-a05d98ec0744"/>
+                <ATTRIBUTES>
+                  <ATT name="Value"><![CDATA[io.javalin.Javalin]]></ATT>
+                  <ATT name="status">1970354901745664</ATT>
+                </ATTRIBUTES>
+                <DEPENDENCIES></DEPENDENCIES>
+              </OBJECT>
+            </COMP>
+            <LINK relation="Definition">
+              <FOREIGNID name="JavaImport" mc="Infrastructure.TagType" uid="003800a8-0000-0155-0000-000000000000"/>
+            </LINK>
+          </DEPENDENCIES>
+        </OBJECT>
+      </COMP>
+    </DEPENDENCIES>
+  </OBJECT>
+</EXT>

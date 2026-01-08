@@ -1,0 +1,41 @@
+<?xml version="1.0" ?>
+<!--GENERATED FILE, PLEASE DO NOT EDIT!!!--><EXT object="java" version="4">
+  <OBJECT>
+    <ID name="java" mc="Standard.Package" uid="6ca62187-cd2e-416f-ae04-ca3bb17f5432"/>
+    <PID name="borne asiat" mc="Standard.Package" uid="8f16b460-8334-46c5-895e-3eb07723ec9c"/>
+    <ATTRIBUTES>
+      <ATT name="IsInstantiable">false</ATT>
+      <ATT name="IsAbstract">false</ATT>
+      <ATT name="IsLeaf">false</ATT>
+      <ATT name="IsRoot">false</ATT>
+      <ATT name="Visibility">Public</ATT>
+      <ATT name="Name"><![CDATA[java]]></ATT>
+      <ATT name="status">1970354901745664</ATT>
+    </ATTRIBUTES>
+    <DEPENDENCIES>
+      <COMP relation="OwnedElement">
+        <COMPID name="nio" mc="Standard.Package" uid="593c9bd4-284e-4a8d-b1bf-037abb4c640c"/>
+        <COMPID name="io" mc="Standard.Package" uid="b3fd8bc8-92b4-4325-ac6c-d7c5418326a3"/>
+        <COMPID name="sql" mc="Standard.Package" uid="1a0eac9f-05b8-43af-8ec9-c75136c5feba"/>
+        <COMPID name="util" mc="Standard.Package" uid="d960bd22-33e5-428d-bb67-7fb5d484019c"/>
+      </COMP>
+      <LINK relation="Extension">
+        <FOREIGNID name="JavaPackage" mc="Infrastructure.Stereotype" uid="01ec23a8-0000-0126-0000-000000000000"/>
+      </LINK>
+      <COMP relation="Tag">
+        <OBJECT>
+          <ID name="" mc="Infrastructure.TaggedValue" uid="99affc71-e80f-402e-8a27-fa0adfc3b6f3"/>
+          <ATTRIBUTES>
+            <ATT name="Name"></ATT>
+            <ATT name="status">1970354901745664</ATT>
+          </ATTRIBUTES>
+          <DEPENDENCIES>
+            <LINK relation="Definition">
+              <FOREIGNID name="JavaExtern" mc="Infrastructure.TagType" uid="003800a8-0000-0197-0000-000000000000"/>
+            </LINK>
+          </DEPENDENCIES>
+        </OBJECT>
+      </COMP>
+    </DEPENDENCIES>
+  </OBJECT>
+</EXT>
